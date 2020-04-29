@@ -48,7 +48,7 @@ spec:
     - name: K9_DOKUMENT_BASE_URL
       value: https://k9-dokument.nais.adeo.no
     - name: AZURE_AUTHORIZED_CLIENTS
-      value: 445ba937-9bb7-4ac1-bf8b-79ec5cdb86c0 #TODO: Oppdater clientId
+      value: 01b50ffd-19f8-439d-85a7-4cdc1b61abe9
     - name: AZURE_V1_DISCOVERY_ENDPOINT
       value: https://login.microsoftonline.com/62366534-1ec3-4962-8869-9b5535279d0b/.well-known/openid-configuration
     - name: AZURE_V2_DISCOVERY_ENDPOINT
