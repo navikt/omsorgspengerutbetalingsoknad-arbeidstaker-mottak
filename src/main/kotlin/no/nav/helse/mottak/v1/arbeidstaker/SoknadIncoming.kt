@@ -11,6 +11,10 @@ internal class SoknadIncoming(json: String) {
     private val jsonObject = JSONObject(json)
     internal val vedlegg: List<Vedlegg>
 
+    internal val sokerFodselsNummer = jsonObject.getJSONObject(JsonKeys.søker).getString(
+        JsonKeys.fødselsnummer
+    )
+
     private fun hentVedlegg() : List<Vedlegg> {
         val vedlegg = mutableListOf<Vedlegg>()
         jsonObject.getJSONArray(JsonKeys.vedlegg).forEach {

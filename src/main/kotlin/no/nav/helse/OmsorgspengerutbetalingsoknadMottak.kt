@@ -24,6 +24,7 @@ import no.nav.helse.dusseldorf.ktor.jackson.JacksonStatusPages
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.dusseldorf.ktor.metrics.init
+import no.nav.helse.mottak.v1.arbeidstaker.DittNavV1Service
 import no.nav.helse.mottak.v1.arbeidstaker.SoknadKafkaProducer
 import no.nav.helse.mottak.v1.arbeidstaker.SoknadMottakService
 import no.nav.helse.mottak.v1.arbeidstaker.SøknadApi
@@ -116,6 +117,9 @@ fun Application.omsorgspengerutbetalingsoknadMottak() {
                 SøknadApi(
                     soknadV1MottakService = SoknadMottakService(
                         dokumentGateway = dokumentGateway,
+                        soknadV1KafkaProducer = kafkaProducer
+                    ),
+                    dittNavV1Service = DittNavV1Service(
                         soknadV1KafkaProducer = kafkaProducer
                     )
                 )
