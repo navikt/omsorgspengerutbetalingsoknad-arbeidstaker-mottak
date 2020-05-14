@@ -25,7 +25,8 @@ object KafkaWrapper {
             withSchemaRegistry = false,
             withSecurity = true,
             topicNames= listOf(
-                Topics.SØKNAD_MOTTATT
+                Topics.SØKNAD_MOTTATT,
+                Topics.DITT_NAV_BESKJED
             )
         )
         return kafkaEnvironment
