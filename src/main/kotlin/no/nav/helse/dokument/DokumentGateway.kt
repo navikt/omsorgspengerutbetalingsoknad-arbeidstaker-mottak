@@ -1,9 +1,5 @@
 package no.nav.helse.dokument
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpPost
 import io.ktor.http.HttpHeaders
@@ -14,6 +10,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import no.nav.helse.CorrelationId
 import no.nav.helse.AktoerId
+import no.nav.helse.k9DokumentKonfigurert
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.core.Retry
 import no.nav.helse.dusseldorf.ktor.health.HealthCheck
@@ -45,7 +42,7 @@ internal class DokumentGateway(
         pathParts = listOf("v1", "dokument")
     )
 
-    private val objectMapper = configuredObjectMapper()
+    private val objectMapper = k9DokumentKonfigurert()
     private val cachedAccessTokenClient = CachedAccessTokenClient(accessTokenClient)
 
     override suspend fun check(): Result {
@@ -126,12 +123,5 @@ internal class DokumentGateway(
                 }
             )
         }
-    }
-
-    private fun configuredObjectMapper() : ObjectMapper {
-        val objectMapper = jacksonObjectMapper()
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        objectMapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
-        return objectMapper
     }
 }

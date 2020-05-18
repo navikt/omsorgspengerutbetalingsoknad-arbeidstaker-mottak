@@ -1,6 +1,8 @@
 package no.nav.helse
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.application.*
 import io.ktor.auth.Authentication
 import io.ktor.auth.authenticate
@@ -16,7 +18,10 @@ import io.ktor.util.KtorExperimentalAPI
 import io.prometheus.client.hotspot.DefaultExports
 import no.nav.helse.auth.AccessTokenClientResolver
 import no.nav.helse.dokument.DokumentGateway
-import no.nav.helse.dusseldorf.ktor.auth.*
+import no.nav.helse.dusseldorf.ktor.auth.AuthStatusPages
+import no.nav.helse.dusseldorf.ktor.auth.allIssuers
+import no.nav.helse.dusseldorf.ktor.auth.clients
+import no.nav.helse.dusseldorf.ktor.auth.multipleJwtIssuers
 import no.nav.helse.dusseldorf.ktor.core.*
 import no.nav.helse.dusseldorf.ktor.health.HealthRoute
 import no.nav.helse.dusseldorf.ktor.health.HealthService
@@ -122,6 +127,10 @@ fun Application.omsorgspengerutbetalingsoknadMottak() {
             }
         }
     }
+}
+
+internal fun k9DokumentKonfigurert(): ObjectMapper = jacksonObjectMapper().dusseldorfConfigured().apply {
+    propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
 }
 
 private fun ApplicationCall.setSoknadItAsAttributeAndGet(): String {
