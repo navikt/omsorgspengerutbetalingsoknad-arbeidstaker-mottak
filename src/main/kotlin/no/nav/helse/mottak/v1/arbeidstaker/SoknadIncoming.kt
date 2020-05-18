@@ -3,9 +3,9 @@ package no.nav.helse.mottak.v1.arbeidstaker
 import no.nav.helse.SoknadId
 import no.nav.helse.AktoerId
 import no.nav.helse.mottak.v1.JsonKeys
-import org.apache.commons.codec.binary.Base64
 import org.json.JSONObject
 import java.net.URI
+import java.util.*
 
 internal class SoknadIncoming(json: String) {
     private val jsonObject = JSONObject(json)
@@ -21,7 +21,7 @@ internal class SoknadIncoming(json: String) {
             val vedleggJson = it as JSONObject
             vedlegg.add(
                 Vedlegg(
-                    content = Base64.decodeBase64(vedleggJson.getString(JsonKeys.content)),
+                    content = Base64.getDecoder().decode(vedleggJson.getString(JsonKeys.content)),
                     contentType = vedleggJson.getString(JsonKeys.contentType),
                     title = vedleggJson.getString(JsonKeys.title)
                 )
