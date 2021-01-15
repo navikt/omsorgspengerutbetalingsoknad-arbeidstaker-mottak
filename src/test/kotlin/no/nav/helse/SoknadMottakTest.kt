@@ -58,7 +58,8 @@ class SoknadMottakTest {
 
         private val authorizedAccessToken = Azure.V1_0.generateJwt(
             clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api",
-            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"
+            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak",
+            roles = setOf("access_as_application") //TODO: Fjernes ved oppgradering av dusseldorf-ktor //TODO: Fjernes ved oppgradering av dusseldorf-ktor
         )
         private val unAauthorizedAccessToken = Azure.V2_0.generateJwt(
             clientId = "ikke-authorized-client",
@@ -73,8 +74,7 @@ class SoknadMottakTest {
                 TestConfiguration.asMap(
                     wireMockServer = wireMockServer,
                     kafkaEnvironment = kafkaEnvironment,
-                    omsorgspengerutbetalingsoknadMottakAzureClientId = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak",
-                    azureAuthorizedClients = setOf("omsorgspengerutbetalingsoknad-arbeidstaker-api")
+                    omsorgspengerutbetalingsoknadMottakAzureClientId = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"
                 )
             )
             val mergedConfig = testConfig.withFallback(fileConfig)
@@ -124,8 +124,16 @@ class SoknadMottakTest {
 
     @Test
     fun `Gyldig søknad blir lagt til prosessering`() {
-        gyldigSoknadBlirLagtTilProsessering(Azure.V1_0.generateJwt(clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api", audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"))
-        gyldigSoknadBlirLagtTilProsessering(Azure.V2_0.generateJwt(clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api", audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"))
+        gyldigSoknadBlirLagtTilProsessering(Azure.V1_0.generateJwt(
+            clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api",
+            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak",
+            roles = setOf("access_as_application") //TODO: Fjernes ved oppgradering av dusseldorf-ktor
+        ))
+        gyldigSoknadBlirLagtTilProsessering(Azure.V2_0.generateJwt(
+            clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api",
+            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak",
+            roles = setOf("access_as_application") //TODO: Fjernes ved oppgradering av dusseldorf-ktor
+        ))
     }
 
     private fun gyldigSoknadBlirLagtTilProsessering(accessToken: String) {

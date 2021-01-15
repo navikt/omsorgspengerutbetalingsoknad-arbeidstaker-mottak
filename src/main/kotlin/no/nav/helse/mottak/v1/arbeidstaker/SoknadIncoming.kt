@@ -27,6 +27,7 @@ internal class SoknadIncoming(json: String) {
                 )
             )
         }
+
         return vedlegg.toList()
     }
 
