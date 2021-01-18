@@ -58,12 +58,12 @@ class SoknadMottakTest {
 
         private val authorizedAccessToken = Azure.V1_0.generateJwt(
             clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api",
-            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak",
-            roles = setOf("access_as_application") //TODO: Fjernes ved oppgradering av dusseldorf-ktor //TODO: Fjernes ved oppgradering av dusseldorf-ktor
+            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"
         )
         private val unAauthorizedAccessToken = Azure.V2_0.generateJwt(
             clientId = "ikke-authorized-client",
-            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"
+            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak",
+            accessAsApplication = false
         )
 
         private var engine = newEngine(kafkaEnvironment)
@@ -126,13 +126,12 @@ class SoknadMottakTest {
     fun `Gyldig søknad blir lagt til prosessering`() {
         gyldigSoknadBlirLagtTilProsessering(Azure.V1_0.generateJwt(
             clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api",
-            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak",
-            roles = setOf("access_as_application") //TODO: Fjernes ved oppgradering av dusseldorf-ktor
+            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"
         ))
+
         gyldigSoknadBlirLagtTilProsessering(Azure.V2_0.generateJwt(
             clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api",
-            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak",
-            roles = setOf("access_as_application") //TODO: Fjernes ved oppgradering av dusseldorf-ktor
+            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"
         ))
     }
 
@@ -225,8 +224,7 @@ class SoknadMottakTest {
                         {
                             "name" : "X-Correlation-ID",
                             "reason" : "Correlation ID må settes.",
-                            "type": "header",
-                            "invalid_value": null
+                            "type": "header"
                         }
                     ]
                 }
