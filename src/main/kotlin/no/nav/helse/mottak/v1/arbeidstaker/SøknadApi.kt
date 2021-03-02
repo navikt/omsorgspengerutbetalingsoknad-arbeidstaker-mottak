@@ -18,8 +18,7 @@ import no.nav.helse.SoknadId
 import no.nav.helse.getSoknadId
 
 internal fun Route.SøknadApi(
-    soknadV1MottakService: SoknadMottakService,
-    dittNavV1Service: DittNavV1Service
+    soknadV1MottakService: SoknadMottakService
 ) {
     post("v1/soknad") {
         val soknadId: SoknadId = call.getSoknadId()
@@ -30,13 +29,7 @@ internal fun Route.SøknadApi(
             metadata = metadata,
             soknad = soknad
         )
-        sendBeskjedTilDittNav(
-            dittNavV1Service = dittNavV1Service,
-            dittNavTekst = "Søknad om utbetaling av omsorgspenger er mottatt.",
-            dittNavLink = "",
-            sokerFodselsNummer = soknad.sokerFodselsNummer,
-            soknadId = soknadId
-        )
+
         call.respond(HttpStatusCode.Accepted, mapOf("id" to soknadId.id))
     }
 }

@@ -1,6 +1,7 @@
 package no.nav.helse
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.application.*
@@ -29,7 +30,6 @@ import no.nav.helse.dusseldorf.ktor.jackson.JacksonStatusPages
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.dusseldorf.ktor.metrics.init
-import no.nav.helse.mottak.v1.arbeidstaker.DittNavV1Service
 import no.nav.helse.mottak.v1.arbeidstaker.SoknadKafkaProducer
 import no.nav.helse.mottak.v1.arbeidstaker.SoknadMottakService
 import no.nav.helse.mottak.v1.arbeidstaker.SøknadApi
@@ -60,7 +60,7 @@ fun Application.omsorgspengerutbetalingsoknadMottak() {
     install(ContentNegotiation) {
         jackson {
             dusseldorfConfigured()
-                .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
+                .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
         }
     }
 
@@ -122,9 +122,6 @@ fun Application.omsorgspengerutbetalingsoknadMottak() {
                 SøknadApi(
                     soknadV1MottakService = SoknadMottakService(
                         dokumentGateway = dokumentGateway,
-                        soknadV1KafkaProducer = kafkaProducer
-                    ),
-                    dittNavV1Service = DittNavV1Service(
                         soknadV1KafkaProducer = kafkaProducer
                     )
                 )
