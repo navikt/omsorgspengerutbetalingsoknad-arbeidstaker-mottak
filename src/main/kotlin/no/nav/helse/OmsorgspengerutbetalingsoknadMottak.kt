@@ -140,4 +140,4 @@ private fun ApplicationCall.setSoknadItAsAttributeAndGet(): String {
     return soknadId
 }
 
-internal fun ApplicationCall.getSoknadId() = SoknadId(attributes[soknadIdAttributeKey])
+internal fun ApplicationCall.getSøknadId() = SøknadId(attributes[soknadIdAttributeKey])

@@ -3,7 +3,7 @@ package no.nav.helse.mottak.v1.arbeidstaker
 import no.nav.helse.AktoerId
 import no.nav.helse.CorrelationId
 import no.nav.helse.Metadata
-import no.nav.helse.SoknadId
+import no.nav.helse.SøknadId
 import no.nav.helse.dokument.Dokument
 import no.nav.helse.dokument.DokumentGateway
 import org.slf4j.LoggerFactory
@@ -19,11 +19,10 @@ internal class SoknadMottakService(
     }
 
     internal suspend fun leggTilProsessering(
-        soknadId: SoknadId,
+        søknadId: SøknadId,
         metadata: Metadata,
         soknad: SoknadIncoming
-    ): SoknadId {
-
+    ): SøknadId {
         val correlationId = CorrelationId(metadata.correlationId)
 
         logger.trace("Lagrer vedlegg")
@@ -36,7 +35,7 @@ internal class SoknadMottakService(
         val outgoing: SoknadOutgoing = soknad
             .medVedleggTitler()
             .medVedleggUrls(vedleggUrls)
-            .medSoknadId(soknadId)
+            .medSøknadId(søknadId)
             .somOutgoing()
 
         logger.info("Legger på kø")
@@ -45,7 +44,7 @@ internal class SoknadMottakService(
             soknad = outgoing
         )
 
-        return soknadId
+        return søknadId
     }
 
     private suspend fun lagreVedlegg(

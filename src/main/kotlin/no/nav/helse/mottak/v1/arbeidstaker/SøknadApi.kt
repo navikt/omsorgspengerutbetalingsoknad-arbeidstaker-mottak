@@ -14,31 +14,31 @@ import io.ktor.routing.post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import no.nav.helse.Metadata
-import no.nav.helse.SoknadId
-import no.nav.helse.getSoknadId
+import no.nav.helse.SøknadId
+import no.nav.helse.getSøknadId
 
 internal fun Route.SøknadApi(
     soknadV1MottakService: SoknadMottakService
 ) {
     post("v1/soknad") {
-        val soknadId: SoknadId = call.getSoknadId()
         val metadata: Metadata = call.metadata()
-        val soknad: SoknadIncoming = withContext(Dispatchers.IO) {call.søknad()}
+        val søknad: SoknadIncoming = withContext(Dispatchers.IO) { call.søknad() }
+        val søknadId: SøknadId = søknad.søknadId ?: call.getSøknadId()
+
         soknadV1MottakService.leggTilProsessering(
-            soknadId = soknadId,
+            søknadId = søknadId,
             metadata = metadata,
-            soknad = soknad
+            soknad = søknad
         )
 
-        call.respond(HttpStatusCode.Accepted, mapOf("id" to soknadId.id))
+        call.respond(HttpStatusCode.Accepted, mapOf("id" to søknadId.id))
     }
 }
 
 
-private suspend fun ApplicationCall.søknad() : SoknadIncoming {
+private suspend fun ApplicationCall.søknad(): SoknadIncoming {
     val json = receiveStream().use { String(it.readAllBytes(), Charsets.UTF_8) }
-    val incoming =
-        SoknadIncoming(json)
+    val incoming = SoknadIncoming(json)
     incoming.validate()
     return incoming
 }
