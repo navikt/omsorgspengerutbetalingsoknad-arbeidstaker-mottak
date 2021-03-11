@@ -16,6 +16,7 @@ import no.nav.helse.RequestUtils.requestAndAssert
 import no.nav.helse.dusseldorf.testsupport.jws.Azure
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.kafka.Topics
+import no.nav.helse.mottak.v1.JsonKeys
 import no.nav.helse.mottak.v1.arbeidstaker.SoknadIncoming
 import no.nav.helse.mottak.v1.arbeidstaker.SoknadOutgoing
 import org.json.JSONObject
@@ -24,6 +25,7 @@ import org.junit.BeforeClass
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -124,16 +126,38 @@ class SoknadMottakTest {
 
     @Test
     fun `Gyldig søknad blir lagt til prosessering`() {
-        gyldigSoknadBlirLagtTilProsessering(Azure.V1_0.generateJwt(
-            clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api",
-            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"
-        ))
+        gyldigSoknadBlirLagtTilProsessering(
+            Azure.V1_0.generateJwt(
+                clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api",
+                audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"
+            )
+        )
 
-        gyldigSoknadBlirLagtTilProsessering(Azure.V2_0.generateJwt(
-            clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api",
-            audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"
-        ))
+        gyldigSoknadBlirLagtTilProsessering(
+            Azure.V2_0.generateJwt(
+                clientId = "omsorgspengerutbetalingsoknad-arbeidstaker-api",
+                audience = "omsorgspengerutbetalingsoknad-arbeidstaker-mottak"
+            )
+        )
     }
+
+    @Test
+    fun `Gyldig søknad med søknadId fra API blir lagt til prosessering`(){
+        val søknadId = UUID.randomUUID().toString()
+        val søknad = gyldigSoknad(gyldigFodselsnummerA, søknadId)
+
+        requestAndAssert(
+            soknad = søknad,
+            expectedCode = HttpStatusCode.Accepted,
+            expectedResponse = """{"id":"$søknadId"}""",
+            accessToken = authorizedAccessToken,
+            path = "/v1/soknad",
+            logger = logger,
+            kafkaEngine = engine
+        )
+
+    }
+
 
     private fun gyldigSoknadBlirLagtTilProsessering(accessToken: String) {
         val soknad = gyldigSoknad(
@@ -283,7 +307,7 @@ class SoknadMottakTest {
         val outgoing = SoknadOutgoing(outgoingJsonObject)
 
         val outgoingFromIncoming = SoknadIncoming(incomingJsonString)
-            .medSoknadId(outgoing.soknadId)
+            .medSøknadId(outgoing.soknadId)
             .medVedleggTitler()
             .medVedleggUrls(outgoing.vedleggUrls)
             .somOutgoing()
@@ -292,10 +316,17 @@ class SoknadMottakTest {
     }
 
     private fun gyldigSoknad(
-        fodselsnummerSoker: String
+        fodselsnummerSoker: String,
+        søknadId: String? = null
     ): String =
         """
         {
+            "${JsonKeys.søknadId}": ${
+                when (søknadId) {
+                    null -> null
+                    else -> "$søknadId"
+                }
+            },
             "søker": {
                 "fødselsnummer": "$fodselsnummerSoker",
                 "aktørId": "123456"
