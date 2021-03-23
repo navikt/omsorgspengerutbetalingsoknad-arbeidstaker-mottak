@@ -10,7 +10,7 @@ val confluentVersion = "5.2.0"
 val mainClass = "no.nav.helse.OmsorgspengerutbetalingsoknadMottakKt"
 
 plugins {
-    kotlin("jvm") version "1.4.30"
+    kotlin("jvm") version "1.4.32"
     id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
