@@ -40,12 +40,12 @@ spec:
     application:
       enabled: true
       tenant: {{tenant}}
-    accessPolicy:
-      inbound:
-        rules:
-          - application: omsorgspengerutbetalingsoknad-arbeidstaker-api
-            namespace: dusseldorf
-            cluster: {{api-cluster}}
+  accessPolicy:
+    inbound:
+      rules:
+        - application: omsorgspengerutbetalingsoknad-arbeidstaker-api
+          namespace: dusseldorf
+          cluster: {{api-cluster}}
   webproxy: true
   env:
   {{#each env}}
