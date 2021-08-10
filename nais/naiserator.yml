@@ -52,3 +52,5 @@ spec:
     - name: {{@key}}
       value: "{{this}}"
   {{/each}}
+  envFrom:
+    - secret: {{app}}
