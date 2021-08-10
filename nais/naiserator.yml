@@ -36,15 +36,16 @@ spec:
   prometheus:
     enabled: true
     path: /metrics
-  vault:
-    enabled: true
-    paths:
-      - mountPath: /var/run/secrets/nais.io/vault
-        kvPath: {{vaultKvPath}}
-      - mountPath: /var/run/secrets/nais.io/azuread
-        kvPath: {{azureadKvPath}}
-      - mountPath: /var/run/secrets/nais.io/serviceuser
-        kvPath: {{serviceuserKvPath}}
+  azure:
+    application:
+      enabled: true
+      tenant: {{tenant}}
+    accessPolicy:
+      inbound:
+        rules:
+          - application: omsorgspengerutbetalingsoknad-arbeidstaker-api
+            namespace: dusseldorf
+            cluster: {{api-cluster}}
   webproxy: true
   env:
   {{#each env}}
