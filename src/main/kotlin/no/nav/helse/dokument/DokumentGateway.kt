@@ -47,7 +47,7 @@ internal class DokumentGateway(
 
     override suspend fun check(): Result {
         return try {
-            accessTokenClient.getAccessToken(lagreDokumentScopes)
+            cachedAccessTokenClient.getAccessToken(lagreDokumentScopes)
             Healthy("DokumentGateway", "Henting av access token å lagre dokument OK.")
         } catch (cause: Throwable) {
             logger.error("Feil ved henting av access token for å lage dokument", cause)
