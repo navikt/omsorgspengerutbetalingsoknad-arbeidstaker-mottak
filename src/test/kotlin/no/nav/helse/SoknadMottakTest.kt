@@ -10,7 +10,6 @@ import io.ktor.server.engine.stop
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.createTestEnvironment
 import io.ktor.server.testing.handleRequest
-import io.ktor.util.KtorExperimentalAPI
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.RequestUtils.requestAndAssert
 import no.nav.helse.dusseldorf.testsupport.jws.Azure
@@ -20,8 +19,8 @@ import no.nav.helse.mottak.v1.JsonKeys
 import no.nav.helse.mottak.v1.arbeidstaker.SoknadIncoming
 import no.nav.helse.mottak.v1.arbeidstaker.SoknadOutgoing
 import org.json.JSONObject
-import org.junit.AfterClass
-import org.junit.BeforeClass
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -31,10 +30,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-@KtorExperimentalAPI
 class SoknadMottakTest {
 
-    @KtorExperimentalAPI
     private companion object {
         private val logger: Logger = LoggerFactory.getLogger(SoknadMottakTest::class.java)
 
@@ -87,7 +84,7 @@ class SoknadMottakTest {
             config = getConfig(kafkaEnvironment)
         })
 
-        @BeforeClass
+        @BeforeAll
         @JvmStatic
         fun buildUp() {
             logger.info("Building up")
@@ -95,7 +92,7 @@ class SoknadMottakTest {
             logger.info("Buildup complete")
         }
 
-        @AfterClass
+        @AfterAll
         @JvmStatic
         fun tearDown() {
             logger.info("Tearing down")

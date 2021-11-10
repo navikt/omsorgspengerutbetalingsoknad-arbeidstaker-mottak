@@ -45,14 +45,9 @@ private suspend fun ApplicationCall.søknad(): SoknadIncoming {
 
 fun ApplicationCall.metadata() = Metadata(
     version = 1,
-    correlationId = request.getCorrelationId(),
-    requestId = response.getRequestId()
+    correlationId = request.getCorrelationId()
 )
 
 fun ApplicationRequest.getCorrelationId(): String {
     return header(HttpHeaders.XCorrelationId) ?: throw IllegalStateException("Correlation Id ikke satt")
-}
-
-fun ApplicationResponse.getRequestId(): String {
-    return headers[HttpHeaders.XRequestId] ?: throw IllegalStateException("Request Id ikke satt")
 }
