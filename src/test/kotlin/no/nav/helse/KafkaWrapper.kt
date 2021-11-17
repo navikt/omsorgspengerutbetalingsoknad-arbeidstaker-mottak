@@ -25,8 +25,7 @@ object KafkaWrapper {
             withSchemaRegistry = false,
             withSecurity = true,
             topicNames= listOf(
-                Topics.SØKNAD_MOTTATT,
-                Topics.DITT_NAV_BESKJED
+                Topics.SØKNAD_MOTTATT
             )
         )
         return kafkaEnvironment
@@ -44,7 +43,7 @@ private fun KafkaEnvironment.testConsumerProperties(clientId: String): MutableMa
 }
 
 internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<JSONObject>> {
-    val consumer = KafkaConsumer<String, TopicEntry<JSONObject>>(
+    val consumer = KafkaConsumer(
         testConsumerProperties("OmsorgspengerutbetalingsoknadProsesseringTest"),
         StringDeserializer(),
         SoknadV1OutgoingDeserialiser()
@@ -74,9 +73,6 @@ internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentSoknad(
     }
     throw IllegalStateException("Fant ikke opprettet oppgave for søknad $soknadId etter $maxWaitInSeconds sekunder.")
 }
-
-fun KafkaEnvironment.username() = username
-fun KafkaEnvironment.password() = password
 
 private class SoknadV1OutgoingDeserialiser : Deserializer<TopicEntry<JSONObject>> {
     override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
